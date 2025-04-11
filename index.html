@@ -1,161 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect or Press & Hold</title>
+    <title>Проверка возраста</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
+            font-family: Arial, sans-serif;
             text-align: center;
-            box-sizing: border-box;
-            overflow: hidden;
+            padding: 50px;
+            background-color: #f5f5f5;
         }
-
-        /* Стили для Android */
-        .android-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-            color: #fff;
-            height: 100vh;
+        .hidden { display: none; }
+        .error { color: red; margin-top: 10px; }
+        #age-check {
+            background: white;
             padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
         }
-        .android-container .button-container {
-            margin-bottom: 20px;
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        .android-container button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            background-color: #ffffff;
-            color: #4A1D96;
+        button {
+            background: #007bff;
+            color: white;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
-            width: 100%;
-            max-width: 300px;
-            transition: all 0.3s ease;
         }
-        .android-container button:hover {
-            background-color: #EDE7F6;
-            color: #321E75;
-        }
-
-        /* Стили для iOS */
-        .ios-container {
-            display: none;
+        button:hover { background: #0056b3; }
+        .warning {
+            font-size: 0.9em;
+            color: #555;
+            margin: 15px 0;
+            line-height: 1.4;
             position: relative;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-            color: #fff;
         }
-        .ios-container h2 {
-            font-size: 32px; /* Уменьшил с 64px до 40px */
-            margin-bottom: 10px;
-            padding: 10px;
-            animation: pulse 2s infinite;
+        .warning::before {
+            content: '🔍';
+            position: absolute;
+            left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .ios-container p {
-            font-size: 18px; /* Уменьшил с 48px до 24px */
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        .ios-container .fingerprint {
-            width: 100%;
-            max-width: 150px; /* Уменьшил с 600px до 300px */
-            height: auto;
-            cursor: pointer;
-        }
-
-        /* Адаптивность для маленьких экранов */
-        @media (max-width: 400px) {
-            .ios-container h2 {
-                font-size: 24px; /* Ещё меньше на маленьких экранах */
-            }
-            .ios-container p {
-                font-size: 14px; /* Ещё меньше на маленьких экранах */
-            }
-            .ios-container .fingerprint {
-                max-width: 150px; /* Ещё меньше на маленьких экранах */
-            }
+        input:focus ~ .warning::before {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <!-- Контейнер для Android -->
-    <div class="android-container" id="androidContainer">
-        <div class="button-container">
-            <button onclick="openLink()">ВІДКРИТИ САЙТ</button>
-        </div>
-    </div>
-
-    <!-- Контейнер для iOS -->
-    <div class="ios-container" id="iosContainer">
-        <h2 id="title">УТРИМУЙТЕ ПАЛЕЦЬ НА КАРТИНЦІ⬇️⬇️!</h2>
-        <p id="content">ВИБЕРІТЬ <b>"*ВІДКРИТИ ПОСИЛАННЯ*"</b></p>
-        <a href="https://prev.affomelody.com/WurFvi" target="_blank">
-            <img class="fingerprint" src="https://so65a.github.io/1/1.png" alt="Отпечаток пальца">
-        </a>
+    <div id="age-check">
+        <h1>Подтвердите свой возраст</h1>
+        <p>Для доступа к контенту необходимо быть старше 18 лет.</p>
+        <label>Дата рождения:</label><br>
+        <input type="date" id="birthdate" required><br>
+        <p class="warning">
+            Мы используем технологию анализа данных для проверки возраста. 
+            Указание некорректной информации может привести к ограничению доступа.
+        </p>
+        <button onclick="checkAge()">Подтвердить</button>
+        <p id="error" class="error hidden"></p>
     </div>
 
     <script>
-        // Распознавание ОС
-        const isAndroid = /android/i.test(navigator.userAgent);
-        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        // Список мультфильмов (YouTube-ссылки)
+        const cartoons = [
+            'https://www.youtube.com/watch?v=ZmMFIYesDN4', // Зверополис (трейлер)
+            'https://www.youtube.com/watch?v=0pdH_3u1Mv0', // Холодное сердце (трейлер)
+            'https://www.youtube.com/watch?v=2rewJkvuW3I', // Шрек (сцена)
+            'https://www.youtube.com/watch?v=FSgU-WORv80'  // Мадагаскар (трейлер)
+        ];
 
-        // Элементы страницы
-        const androidContainer = document.getElementById('androidContainer');
-        const iosContainer = document.getElementById('iosContainer');
+        function checkAge() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const today = new Date();
+            const age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            const dayDiff = today.getDate() - birthdate.getDate();
 
-        // Показываем нужный контейнер в зависимости от ОС
-        if (isAndroid) {
-            androidContainer.style.display = 'flex';
-            iosContainer.style.display = 'none';
-        } else if (isIOS) {
-            androidContainer.style.display = 'none';
-            iosContainer.style.display = 'flex';
-        } else {
-            // Для других устройств (например, десктоп) показываем iOS-версию
-            androidContainer.style.display = 'none';
-            iosContainer.style.display = 'flex';
+            // Проверка корректности даты
+            if (!birthdate || isNaN(birthdate.getTime())) {
+                showError('Пожалуйста, выберите дату рождения.');
+                return;
+            }
+
+            // Проверка возраста
+            if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+                // Редирект на случайный мультфильм
+                const randomCartoon = cartoons[Math.floor(Math.random() * cartoons.length)];
+                window.location.href = randomCartoon;
+                return;
+            }
+
+            // Редирект для пользователей 18+
+            window.location.href = 'https://t.me/+vPVaSKO6xYFkOGY6'; // Замени на свою ссылку
         }
 
-        // Функция для Android
-        const targetUrl = "https://prev.affomelody.com/WurFvi";
-
-        const openLink = () => {
-            let formattedUrl = targetUrl;
-            if (!targetUrl.startsWith("https://") && !targetUrl.startsWith("http://")) {
-                formattedUrl = "https://" + targetUrl;
-            }
-            window.location.href = `intent://${formattedUrl.replace('https://', '')}#Intent;scheme=https;package=com.android.chrome;end`;
-            // Резервный редирект, если intent не сработал
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 500);
-        };
+        function showError(message) {
+            document.getElementById('error').textContent = message;
+            document.getElementById('error').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
