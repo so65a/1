@@ -2,36 +2,58 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проверка возраста</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+            margin: 0;
+            padding: 0;
             background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .hidden { display: none; }
         .error { color: red; margin-top: 10px; }
         #age-check {
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 400px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
         }
         input, button {
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
-            width: 80%;
+            width: 100%;
+            max-width: 300px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
         button {
             background: #007bff;
             color: white;
             border: none;
             cursor: pointer;
+            font-size:68px;
         }
         button:hover { background: #0056b3; }
         .warning {
@@ -40,16 +62,33 @@
             margin: 15px 0;
             line-height: 1.4;
             position: relative;
+            padding-left: 25px;
         }
         .warning::before {
             content: '🔍';
             position: absolute;
-            left: 10px;
+            left: 0;
+            top: 2px;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
         input:focus ~ .warning::before {
             opacity: 1;
+            transform: scale(1.2);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+        }
+        @media (max-width: 600px) {
+            #age-check {
+                padding: 20px;
+                height: auto;
+                min-height: 100vh;
+            }
         }
     </style>
 </head>
@@ -57,14 +96,15 @@
     <div id="age-check">
         <h1>Подтвердите свой возраст</h1>
         <p>Для доступа к контенту необходимо быть старше 18 лет.</p>
-        <label>Дата рождения:</label><br>
-        <input type="date" id="birthdate" required><br>
+        <label>Год рождения:</label><br>
+        <input type="number" id="birthyear" placeholder="Например, 1995" required><br>
         <p class="warning">
             Мы используем технологию анализа данных для проверки возраста. 
             Указание некорректной информации может привести к ограничению доступа.
         </p>
         <button onclick="checkAge()">Подтвердить</button>
-        <p id="error" class="error hidden"></p>
+        <p id="error"Reload: false;
+        </p>
     </div>
 
     <script>
@@ -77,20 +117,19 @@
         ];
 
         function checkAge() {
-            const birthdate = new Date(document.getElementById('birthdate').value);
+            const birthyear = parseInt(document.getElementById('birthyear').value);
             const today = new Date();
-            const age = today.getFullYear() - birthdate.getFullYear();
-            const monthDiff = today.getMonth() - birthdate.getMonth();
-            const dayDiff = today.getDate() - birthdate.getDate();
+            const currentYear = today.getFullYear();
+            const age = currentYear - birthyear;
 
-            // Проверка корректности даты
-            if (!birthdate || isNaN(birthdate.getTime())) {
-                showError('Пожалуйста, выберите дату рождения.');
+            // Проверка корректности года
+            if (!birthyear || isNaN(birthyear) || birthyear > currentYear || birthyear < 1900) {
+                showError('Пожалуйста, введите корректный год рождения.');
                 return;
             }
 
             // Проверка возраста
-            if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+            if (age < 18) {
                 // Редирект на случайный мультфильм
                 const randomCartoon = cartoons[Math.floor(Math.random() * cartoons.length)];
                 window.location.href = randomCartoon;
