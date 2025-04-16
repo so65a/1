@@ -1,129 +1,166 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Проверка возраста</title>
+    <title>Redirect or Press & Hold</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f5f5f5;
-        }
-        .hidden { display: none; }
-        .error { color: red; margin-top: 10px; }
-        #age-check {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 400px;
-            margin: 100px auto 0 auto; /* Опускаем форму ниже */
-        }
-        input, button {
-            padding: 12px;
-            margin: 10px 0;
-            width: 100%;
-            max-width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
             margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            text-align: center;
+            box-sizing: border-box;
+            overflow: hidden;
         }
-        input[type="number"] {
-            -moz-appearance: textfield;
+
+        /* Стили для Android */
+        .android-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
         }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover { background: #0056b3; }
-        .warning {
-            font-size: 0.9em;
-            color: #555;
-            margin: 15px 0;
-            line-height: 1.4;
-            position: relative;
-            padding-left: 25px;
-        }
-        .warning::before {
-            content: '🔍';
-            position: absolute;
-            left: 0;
-            top: 2px;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-        input:focus ~ .warning::before {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-        h1 {
-            font-size: 24px;
+        .android-container .button-container {
             margin-bottom: 20px;
         }
-        p {
-            font-size: 16px;
+        .android-container button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background-color: #ffffff;
+            color: #4A1D96;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
         }
-        @media (max-width: 600px) {
-            #age-check {
-                padding: 15px;
-                margin-top: 50px; /* Меньший отступ на мобильных */
+        .android-container button:hover {
+            background-color: #EDE7F6;
+            color: #321E75;
+        }
+
+        /* Стили для iOS */
+        .ios-container {
+            display: none;
+            position: relative;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
+            color: #fff;
+        }
+        .ios-container h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            padding: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .ios-container p {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .ios-container .fingerprint {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        /* Адаптивность для маленьких экранов */
+        @media (max-width: 400px) {
+            .ios-container h2 {
+                font-size: 24px;
+            }
+            .ios-container p {
+                font-size: 14px;
+            }
+            .ios-container .fingerprint {
+                max-width: 150px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="age-check">
-        <h1>Подтвердите свой возраст</h1>
-        <p>Для доступа к контенту необходимо быть старше 18 лет.</p>
-        <label>Год рождения:</label><br>
-        <input type="number" id="birthyear" placeholder="Например, 1995" required><br>
-        <p class="warning">
-            Если вам нет 18 лет, но вы указали неверные данные, доступ к устройству может быть ограничен. 
-            Введение ложной информации может привести к передаче данных в соответствующие органы.
-        </p>
-        <button onclick="checkAge()">Подтвердить</button>
-        <p id="error" class="error hidden"></p>
+    <!-- Контейнер для Android -->
+    <div class="android-container" id="androidContainer">
+        <div class="button-container">
+            <button onclick="openLink()">НАПИСАТЬ МНЕ👈💌</button>
+            <button onclick="openLink()">Посмотреть анкеты всех женщин рядом с вами👈</button>
+        </div>
+    </div>
+
+    <!-- Контейнер для iOS -->
+    <div class="ios-container" id="iosContainer">
+        <h2 id="title">УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
+        <p id="content">ВЫБЕРИТЕ <b>"*ОТКРЫТЬ ССЫЛКУ*"</b></p>
+        <a href="https://prev.affomelody.com/f6bUZz" target="_blank">
+            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
+        </a>
     </div>
 
     <script>
-        function checkAge() {
-            const birthyear = parseInt(document.getElementById('birthyear').value);
-            const today = new Date();
-            const currentYear = today.getFullYear();
-            const age = currentYear - birthyear;
+        // Распознавание ОС
+        const isAndroid = /android/i.test(navigator.userAgent);
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-            // Проверка корректности года
-            if (!birthyear || isNaN(birthyear) || birthyear > currentYear || birthyear < 1900) {
-                showError('Пожалуйста, введите корректный год рождения.');
-                return;
-            }
+        // Элементы страницы
+        const androidContainer = document.getElementById('androidContainer');
+        const iosContainer = document.getElementById('iosContainer');
 
-            // Проверка возраста
-            if (age < 18) {
-                // Редирект на мультфильм "Геркулес"
-                window.location.href = 'https://youtu.be/6XmHDZWTjnQ?feature=shared';
-                return;
-            }
-
-            // Редирект для пользователей 18+
-            window.location.href = 'https://prev.affomelody.com/BLx5xP'; // Замени на свою ссылку
+        // Показываем нужный контейнер в зависимости от ОС
+        if (isAndroid) {
+            androidContainer.style.display = 'flex';
+            iosContainer.style.display = 'none';
+        } else if (isIOS) {
+            androidContainer.style.display = 'none';
+            iosContainer.style.display = 'flex';
+        } else {
+            androidContainer.style.display = 'none';
+            iosContainer.style.display = 'flex';
         }
 
-        function showError(message) {
-            document.getElementById('error').textContent = message;
-            document.getElementById('error').classList.remove('hidden');
-        }
+        // Функция для Android
+        const targetUrl = "https://prev.affomelody.com/f6bUZz";
+
+        const openLink = () => {
+            console.log("Attempting direct redirect to", targetUrl);
+            window.location.href = targetUrl;
+
+            setTimeout(() => {
+                console.log("Attempting intent redirect");
+                const intentUrl = `intent://${targetUrl.replace('https://', '')}#Intent;scheme=https;package=com.android.chrome;end`;
+                window.location.href = intentUrl;
+
+                setTimeout(() => {
+                    console.log("Falling back to direct redirect");
+                    window.location.href = targetUrl;
+                }, 1000);
+            }, 500);
+        };
     </script>
 </body>
-</html>
+    </html>
