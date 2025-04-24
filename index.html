@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect or Press & Hold</title>
+    <title>Відкрити у браузері</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -15,172 +15,104 @@
             text-align: center;
             box-sizing: border-box;
             overflow: hidden;
-        }
-
-        /* Стили для Android */
-        .android-container {
-            display: none;
-            position: relative;
-            height: 100vh;
+            background: linear-gradient(135deg, #1a202c, #4a1d96, #5b21b6);
+            color: #ffffff;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-            color: #fff;
         }
-        .android-container h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            padding: 10px;
-            animation: pulse 2s infinite;
+
+        h2, p {
+            font-size: 24px;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
         }
-        .android-container p {
-            font-size: 18px;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        .android-container .fingerprint {
-            width: 100%;
-            max-width: 150px;
-            height: auto;
-            cursor: pointer;
-        }
-        .android-container .backup-button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
+
+        h2 {
             font-weight: 600;
-            background-color: #ffffff;
-            color: #4A1D96;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            width: 100%;
-            max-width: 300px;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            display: inline-block;
-        }
-        .android-container .backup-button:hover {
-            background-color: #EDE7F6;
-            color: #321E75;
-        }
-        .android-container .qr-code {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 150px;
-            height: auto;
-        }
-
-        /* Стили для iOS */
-        .ios-container {
-            display: none;
-            position: relative;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-            color: #fff;
-        }
-        .ios-container h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            padding: 10px;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .ios-container p {
-            font-size: 18px;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        .ios-container .fingerprint {
-            width: 100%;
-            max-width: 150px;
-            height: auto;
-            cursor: pointer;
+
+        p {
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* Адаптивность для маленьких экранов */
+        p strong {
+            color: #e0c3fc;
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: bounce 1.5s infinite;
+        }
+
+        .compass-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Адаптивність */
         @media (max-width: 400px) {
-            .ios-container h2, .android-container h2 {
-                font-size: 24px;
+            h2, p {
+                font-size: 18px;
+                padding: 8px 15px;
             }
-            .ios-container p, .android-container p {
-                font-size: 14px;
+            .icon {
+                font-size: 36px;
+                margin-bottom: 15px;
             }
-            .ios-container .fingerprint, .android-container .fingerprint {
-                max-width: 150px;
-            }
-            .android-container .backup-button {
-                font-size: 1rem;
-                padding: 0.8rem 1.5rem;
+            .compass-icon {
+                width: 18px;
+                height: 18px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Контейнер для Android -->
-    <div class="android-container" id="androidContainer">
-        <h2>УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
-        <p>ВЫБЕРИТЕ <b>"*ОТКРЫТЬ ССЫЛКУ*"</b></p>
-        <a href="https://prev.affomelody.com/f6bUZz" target="_blank" id="fingerprintLink">
-            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
-        </a>
-        <p>Если удержание не работает, нажмите кнопку или отсканируйте QR-код:</p>
-        <a href="https://prev.affomelody.com/f6bUZz" target="_blank" class="backup-button">ОТКРЫТЬ ССЫЛКУ</a>
-        <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://prev.affomelody.com/f6bUZz" alt="QR Code">
-    </div>
-
-    <!-- Контейнер для iOS -->
-    <div class="ios-container" id="iosContainer">
-        <h2>УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
-        <p>ВЫБЕРИТЕ <b>"*ОТКРЫТЬ ССЫЛКУ*"</b></p>
-        <a href="https://prev.affomelody.com/f6bUZz" target="_blank">
-            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
-        </a>
-    </div>
+    <div class="icon">…</div>
+    <h2>НАТИСНИ НА ТРИ КРАПКИ ⬆️</h2>
+    <p>ОБЕРИ <strong>"ВІДКРИТИ У БРАУЗЕРІ"</strong>
+        <span>
+            <svg class="compass-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e0c3fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+        </span>
+    </p>
 
     <script>
-        // Распознавание ОС
-        const isAndroid = /android/i.test(navigator.userAgent);
-        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        const targetUrl = "https://prev.affomelody.com/WurFvi";
+        const userAgent = navigator.userAgent.toLowerCase();
+        const urlParams = new URLSearchParams(window.location.search);
+        const isExternal = urlParams.get('external') === 'true';
 
-        // Элементы страницы
-        const androidContainer = document.getElementById('androidContainer');
-        const iosContainer = document.getElementById('iosContainer');
+        // Проверяем, открыт ли сайт в TikTok in-app браузере
+        const isTikTokBrowser = /ttwebview|musically|tiktok|bytedance|douyin|webview/i.test(userAgent) || 
+                               window.navigator.standalone === false;
 
-        // Показываем нужный контейнер в зависимости от ОС
-        if (isAndroid) {
-            androidContainer.style.display = 'flex';
-            iosContainer.style.display = 'none';
-        } else if (isIOS) {
-            androidContainer.style.display = 'none';
-            iosContainer.style.display = 'flex';
-        } else {
-            androidContainer.style.display = 'none';
-            iosContainer.style.display = 'flex';
-        }
-
-        // Проверка интерактивности изображения для Android
-        if (isAndroid) {
-            const fingerprintLink = document.getElementById('fingerprintLink');
-            fingerprintLink.addEventListener('touchstart', () => {
-                console.log('Touch started on fingerprint image');
-            });
-            fingerprintLink.addEventListener('contextmenu', (e) => {
-                console.log('Context menu triggered');
-            });
+        // Если это внешний браузер или есть параметр ?external=true, редиректим
+        if (!isTikTokBrowser || isExternal) {
+            window.location.href = targetUrl;
         }
     </script>
 </body>
